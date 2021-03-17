@@ -1,0 +1,14 @@
+Feedback
+a) the ranges on the marginals are both from 0 to 1
+
+-1
+
+b)  the limits on your conditionals should be
+
+f(x|y) is from y<x<1 
+
+f(y|x) is from 0 <y< x
+
+-1
+Points
+8 / 10
