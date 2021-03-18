@@ -63,14 +63,6 @@ for m = 1:20
     [theo(m,:), expr(m,:)] = scenario2(m);
 end
 figure
-% for n = 1:20
-%    for p = 1:4
-%       plot(n, theo(n,p),'o')
-%       hold on
-%       plot(n, expr(n,p),'x')
-%    end
-% end
-
 for p = 1:4
    plot(1:1:20, theo(:,p))
    hold on
