@@ -117,7 +117,7 @@ function [mse, bias, variance] = rayleigh_mse_bias_variance(N,i,alpha)
     avg=mean(rayleigh.^2,2);
     alpha2 = sqrt(.5 * avg);          %ML estimator
     mse= mean((alpha - alpha2).^2);   %get MSE
-    bias = mean((alpha2 - alpha));   %get bias
+    bias = mean(alpha2) - alpha;   %get bias
     variance = var(alpha2);         %get variance
 
 
@@ -130,7 +130,7 @@ function [mse, bias, variance] = exponential_mse_bias_variance(N,i,lambda)
     add=sum(exponential,2);
     lambda2 =i ./ add;               %ML estimator
     mse = mean((lambda- lambda2).^2);  %get the MSE 
-    bias= mean((lambda2 - lambda));    %get the bias
+    bias= mean(lambda2) - lambda;    %get the bias
     variance = var(lambda2);            %get the variance 
 
 
