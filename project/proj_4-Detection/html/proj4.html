@@ -1,0 +1,620 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>proj4</title><meta name="generator" content="MATLAB 9.9"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2021-04-22"><meta name="DC.source" content="proj4.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#2">Part 1</a></li><li><a href="#3">e)</a></li><li><a href="#4">Part 2</a></li></ul></div><pre class="codeinput">clc;
+clear;
+close <span class="string">all</span>;
+</pre><h2 id="2">Part 1</h2><pre class="codeinput"><span class="comment">% a)</span>
+
+<span class="comment">% number of iterations</span>
+N = 10000;
+<span class="comment">% probability of target being there</span>
+p0 = 0.8;
+<span class="comment">% probability of target not being there</span>
+p1 = 1 - p0;
+
+eta_1a = p0/p1;
+
+<span class="comment">% variance</span>
+var_1a = 1;
+<span class="comment">% standard deviation</span>
+sigma_1a = sqrt(var_1a);
+<span class="comment">% mean difference</span>
+a_1a = 1;
+<span class="comment">% signal to noise ratio</span>
+SNR_1a = a_1a/var_1a;
+
+target_1a = (rand(N,1) &gt; p0);
+A_1a = a_1a * double(target_1a);
+X_1a = sqrt(var_1a) * rand(N,1);
+
+Y_1a = A_1a + X_1a;
+
+<span class="comment">% MAP decision boundary</span>
+<span class="comment">% f(eta|H0) * P0 = f(eta|H1) * P1</span>
+<span class="comment">%    (2 * var * log(P0/P1) + a^2) / (2 * a)</span>
+<span class="comment">%  = a/2 + var * log(P0/P1)</span>
+gamma_1a = a_1a ./ 2 + var_1a * log(eta_1a) ./ (a_1a);
+
+<span class="comment">% theoretical probability of error</span>
+p1_0 = 1 - normcdf(gamma_1a, 0, sigma_1a);
+p0_1 = normcdf(gamma_1a, a_1a, sigma_1a);
+theoretical_err = p0 * p1_0 + p1 * p0_1;
+
+<span class="comment">% compare with the target to find the experimental probability of error</span>
+experimental_err = 1 - sum(or(and(Y_1a &gt; gamma_1a, target_1a), <span class="keyword">...</span>
+                              and(Y_1a &lt;= gamma_1a, ~target_1a))) / N;
+
+disp(<span class="string">"Perr_theoretical = "</span> + theoretical_err);
+disp(<span class="string">"Perr_experimental = "</span> + experimental_err);
+
+<span class="comment">%b)</span>
+
+<span class="comment">% same process as part a</span>
+a_1b = [0.5, 1, 2, 4];
+eta_1b = logspace(-7, 7, N);
+var_1b = 1;
+
+pf = zeros(length(a_1b), 1, N);
+pd = zeros(length(a_1b), 1, N);
+SNR = zeros(length(a_1b), 1, N);
+
+<span class="keyword">for</span> i = 1:length(a_1b)
+    <span class="comment">% same process as part a</span>
+    target_1b = (rand(N,1) &gt; p0);
+    A_1b = a_1b(i) * double(target_1b);
+    X_1b = sqrt(var_1b) * randn(N,1);
+
+    Y_1b = A_1b + X_1b;
+
+    gamma_1b = a_1b(i)/2 + var_1b * log(eta_1b) / a_1b(i);
+
+    <span class="comment">% find false positive probability pf and true positive probability pd</span>
+    pf(i, :, :) = sum(and(Y_1b &gt;gamma_1b, ~target_1b)) / sum(~target_1b);
+    pd(i, :, :) = sum(and(Y_1b &gt;gamma_1b, target_1b)) ./ sum(target_1b);
+
+    SNR(i) = a_1b(i) / var_1b;
+<span class="keyword">end</span>
+
+<span class="comment">% plotting</span>
+figure;
+<span class="keyword">for</span> j = 1:length(a_1b)
+    plot(reshape(pf(j, :, :), [1,N]), reshape(pd(j, :, :), [1,N]), <span class="keyword">...</span>
+        <span class="string">'DisplayName'</span>, [<span class="string">'SNR = '</span>, num2str(SNR(j))], <span class="string">'linewidth'</span>, 1)
+    hold <span class="string">on</span>
+<span class="keyword">end</span>
+
+xlabel(<span class="string">'Pf'</span>),ylabel(<span class="string">'Pd'</span>),title(<span class="string">'Receiver Operating Curve'</span>),legend;
+
+<span class="comment">% c)</span>
+
+<span class="comment">% (C0_1 - C1_1) * P1 * f(y|H1) = (C1_0 - C0_0) * P0 * f(y|H0)</span>
+<span class="comment">% solve for eta</span>
+<span class="comment">% eta = (C1_0 - C0_0) * P0 / ((C0_1 - C1_1) * P1)</span>
+eta_1c = (0.1) * p0 /p1;
+a_1c =2;
+var_1c = 1;
+
+<span class="comment">% same stuff as part b</span>
+<span class="comment">% just a different eta</span>
+target_1c = (rand(N,1) &gt; p0);
+A_1c = a_1c * double(target_1c);
+X_1c = sqrt(var_1c) * randn(N,1);
+
+Y_1c = A_1c + X_1c;
+
+gamma_1c = a_1c/2 + var_1c * log(eta_1c) / a_1c;
+
+<span class="comment">% find false positive probability pf and true positive probability pd</span>
+pf_1c = sum(and(Y_1c &gt; gamma_1c, ~target_1c)) / sum(~target_1c);
+pd_1c = sum(and(Y_1c &gt; gamma_1c, target_1c)) ./ sum(target_1c);
+
+figure;
+<span class="comment">% using a = 2, first plot the corresponding ROC with a = 2, SNR = 2</span>
+plot(reshape(pf(3, :, :), [1,N]), reshape(pd(3, :, :), [1,N]), <span class="keyword">...</span>
+        <span class="string">'DisplayName'</span>, [<span class="string">'SNR = '</span>,num2str(SNR(3))], <span class="string">'linewidth'</span>, 1)
+hold <span class="string">on</span>
+<span class="comment">% mark the point</span>
+plot(pf_1c, pd_1c, <span class="string">'*'</span>, <span class="string">'DisplayName'</span>, <span class="string">'\eta = 0.4'</span>)
+xlabel(<span class="string">'Pf'</span>),ylabel(<span class="string">'Pd'</span>)
+title([<span class="string">'Receiver Operating Curve, C_{01} = 10 * C_{10}'</span> <span class="keyword">...</span>
+        <span class="string">'(\eta = 0.4), SNR = '</span>, num2str(SNR(3))])
+legend;
+</pre><pre class="codeoutput">Perr_theoretical = 0.18616
+Perr_experimental = 0.1796
+</pre><img vspace="5" hspace="5" src="proj4_01.png" alt=""> <img vspace="5" hspace="5" src="proj4_02.png" alt=""> <h2 id="3">e)</h2><pre class="codeinput">clear;
+
+<span class="comment">% a)</span>
+<span class="comment">% retyping values</span>
+N = 10000;
+p0 = 0.8;
+p1 = 1 - p0;
+eta = p0/p1;
+var_x = 1;
+var_z = 25;
+sigma_x = sqrt(var_x);
+sigma_z = sqrt(var_z);
+a = 1;
+
+target = (rand(N,1) &gt; p0);
+A = a * double(target);
+X = sigma_x * randn(N,1);
+Z = sigma_z * randn(N,1);
+
+<span class="comment">% new definition of Y here</span>
+Y = a + X .* target + Z .* (~target);
+
+
+<span class="comment">% theoretical probability of error</span>
+gamma = sqrt(2 * ((var_x * var_z)/(var_x - var_z)) * <span class="keyword">...</span>
+                log(eta * sqrt(var_x/var_z)));
+
+p1_0 = normcdf(gamma, 0, sigma_z) - normcdf(-gamma, 0, sigma_z);
+p0_1 = 2 * (1 - normcdf(gamma, 0, sigma_x));
+
+theoretical_err = p1_0 * p0 + p0_1 * p1;
+
+<span class="comment">% experimental probability of error</span>
+experimental_err = sum(or(<span class="keyword">...</span>
+ and( <span class="keyword">...</span>
+  (p1 * (1 / sqrt(var_x * 2 * pi)) * exp(-((Y - a).^2) / (2 * var_x)))&gt;=<span class="keyword">...</span>
+  (p0 * (1 / sqrt(var_z * 2 * pi)) * exp(-((Y - a).^2) / (2 * var_z)))<span class="keyword">...</span>
+    , target),<span class="keyword">...</span>
+  and(<span class="keyword">...</span>
+  (p1 * (1 / sqrt(var_x * 2 * pi)) * exp(-((Y - a).^2) / (2 * var_x)))&gt;=<span class="keyword">...</span>
+  (p0 * (1 / sqrt(var_z * 2 * pi)) * exp(-((Y - a).^2) / (2 * var_z)))<span class="keyword">...</span>
+  , ~target))) / N;
+disp(<span class="string">"Perr_theoretical = "</span> + theoretical_err);
+disp(<span class="string">"Perr_experimental = "</span> + experimental_err);
+
+<span class="comment">% b)</span>
+var_z = [4, 9, 16, 25];
+sigma_z = sqrt(var_z);
+
+eta = logspace(-5,3,500);
+
+pf = zeros(length(var_z), 1, 500);
+pd = zeros(length(var_z), 1, 500);
+sigZ_to_sigX = zeros(length(var_z), 1, N);
+
+<span class="keyword">for</span> i = 1:length(var_z)
+    target = (rand(N,1) &gt; p0);
+    A = a * double(target);
+    X = sigma_x * randn(N,1);
+    Z = sigma_z(i) * randn(N,1);
+    Y = a + X .* target + Z .* (~target);
+
+    <span class="comment">% receiver operating value</span>
+    pf(i,:,:) = sum(and(<span class="keyword">...</span>
+     (p1 * (1/sqrt(var_x *2*pi)) * exp(-((Y - a).^2) / (2 * var_x))) &gt;= <span class="keyword">...</span>
+     (p0*(1/sqrt(var_z(i)*2*pi)) * exp(-((Y-a).^2)/(2*var_z(i))))*eta<span class="keyword">...</span>
+     , ~target))/sum(~target);
+    pd(i,:,:) = sum(and(<span class="keyword">...</span>
+     (p1 * (1/sqrt(var_x *2*pi)) * exp(-((Y - a).^2) / (2 * var_x))) &gt;= <span class="keyword">...</span>
+     (p0*(1/sqrt(var_z(i)*2*pi)) * exp(-((Y-a).^2)/(2*var_z(i))))*eta<span class="keyword">...</span>
+     , target))/sum(target);
+    <span class="comment">% \sigma_z^2 / \sigma_x^2 ratio</span>
+    sigZ_to_sigX(i) = var_z(i) / var_x;
+<span class="keyword">end</span>
+
+<span class="comment">% plotting</span>
+figure;
+<span class="keyword">for</span> j = 1:length(var_z)
+    plot(reshape(pf(j, :, :), [1,500]), reshape(pd(j, :, :), [1,500]), <span class="keyword">...</span>
+        <span class="string">'DisplayName'</span>, [<span class="string">'\sigma_z^2/\sigma_x^2= '</span>,num2str(sigZ_to_sigX(j))], <span class="keyword">...</span>
+        <span class="string">'linewidth'</span>, 1)
+    hold <span class="string">on</span>
+<span class="keyword">end</span>
+
+xlabel(<span class="string">'Pf'</span>),ylabel(<span class="string">'Pd'</span>),title(<span class="string">'Receiver Operating Curve'</span>),legend;
+
+<span class="comment">% Thanks to Mark Koszykowski for his help with part 1 of this project.</span>
+</pre><pre class="codeoutput">Perr_theoretical = 0.18584
+Perr_experimental = 0.1873
+</pre><img vspace="5" hspace="5" src="proj4_03.png" alt=""> <h2 id="4">Part 2</h2><pre class="codeinput">clear;
+load(<span class="string">'Iris.mat'</span>);
+
+<span class="comment">%given/set-up</span>
+num_samples = size(features, 1);
+num_classes = 3;
+
+<span class="comment">%splitting data</span>
+size_split= num_samples/2;
+shuffling=randperm(num_samples,num_samples);
+training=transpose(shuffling);
+training=training(76:150);
+testing=training(1:75);
+
+<span class="comment">%training</span>
+train_f = features(training, :);
+train_l = labels(training, :);
+
+<span class="comment">%testing</span>
+test_f = features(testing, :);
+test_l= labels(testing, :);
+
+<span class="comment">% calculating priors</span>
+priors = histcounts(test_l) / length(test_l);
+
+<span class="comment">%locating where the labels are for each class (1,2,3)</span>
+track_1=train_l==1;
+track_2=train_l==2;
+track_3=train_l==3;
+feat1=train_f(track_1,:);
+feat2=train_f(track_2,:);
+feat3=train_f(track_3,:);
+
+<span class="comment">%calculating the mean</span>
+mu1=mean(feat1);
+mu2=mean(feat2);
+mu3=mean(feat3);
+
+<span class="comment">%calculating the variances</span>
+cov1=cov(feat1);
+cov2=cov(feat2);
+cov3=cov(feat3);
+
+<span class="comment">%compute likelihood</span>
+result(:,1) = mvnpdf(test_f, mu1, cov1) * priors(1);
+result(:,2) = mvnpdf(test_f, mu2, cov2) * priors(2);
+result(:,3) = mvnpdf(test_f, mu3, cov3) * priors(3);
+
+<span class="comment">% get the maximum</span>
+[~, est] = max(result, [], 2);
+
+<span class="comment">%calculate the error</span>
+prob_err = 1- mean(est == test_l);
+disp(<span class="string">"The probability of error: "</span>+prob_err);
+
+<span class="comment">%confusion matrix</span>
+cm=confusionmat(est, test_l);
+
+figure;
+confusionchart(cm);
+title(<span class="string">'Confusion Matrix'</span>);
+<span class="comment">%disp(cm);</span>
+</pre><pre class="codeoutput">The probability of error: 0.013333
+</pre><img vspace="5" hspace="5" src="proj4_04.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2020b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+clc;
+clear;
+close all;
+%% Part 1
+
+% a)
+
+% number of iterations
+N = 10000;
+% probability of target being there
+p0 = 0.8;
+% probability of target not being there
+p1 = 1 - p0;
+
+eta_1a = p0/p1;
+
+% variance
+var_1a = 1;
+% standard deviation
+sigma_1a = sqrt(var_1a);
+% mean difference
+a_1a = 1;
+% signal to noise ratio
+SNR_1a = a_1a/var_1a;
+
+target_1a = (rand(N,1) > p0);
+A_1a = a_1a * double(target_1a);
+X_1a = sqrt(var_1a) * rand(N,1);
+
+Y_1a = A_1a + X_1a;
+
+% MAP decision boundary
+% f(eta|H0) * P0 = f(eta|H1) * P1
+%    (2 * var * log(P0/P1) + a^2) / (2 * a)
+%  = a/2 + var * log(P0/P1)
+gamma_1a = a_1a ./ 2 + var_1a * log(eta_1a) ./ (a_1a);
+
+% theoretical probability of error
+p1_0 = 1 - normcdf(gamma_1a, 0, sigma_1a);
+p0_1 = normcdf(gamma_1a, a_1a, sigma_1a);
+theoretical_err = p0 * p1_0 + p1 * p0_1;
+                     
+% compare with the target to find the experimental probability of error
+experimental_err = 1 - sum(or(and(Y_1a > gamma_1a, target_1a), ...
+                              and(Y_1a <= gamma_1a, ~target_1a))) / N;
+                          
+disp("Perr_theoretical = " + theoretical_err);
+disp("Perr_experimental = " + experimental_err);
+
+%b)
+
+% same process as part a
+a_1b = [0.5, 1, 2, 4];
+eta_1b = logspace(-7, 7, N);
+var_1b = 1;
+
+pf = zeros(length(a_1b), 1, N);
+pd = zeros(length(a_1b), 1, N);
+SNR = zeros(length(a_1b), 1, N);
+
+for i = 1:length(a_1b)
+    % same process as part a
+    target_1b = (rand(N,1) > p0);
+    A_1b = a_1b(i) * double(target_1b);
+    X_1b = sqrt(var_1b) * randn(N,1);
+
+    Y_1b = A_1b + X_1b;
+    
+    gamma_1b = a_1b(i)/2 + var_1b * log(eta_1b) / a_1b(i);
+    
+    % find false positive probability pf and true positive probability pd 
+    pf(i, :, :) = sum(and(Y_1b >gamma_1b, ~target_1b)) / sum(~target_1b);
+    pd(i, :, :) = sum(and(Y_1b >gamma_1b, target_1b)) ./ sum(target_1b);
+    
+    SNR(i) = a_1b(i) / var_1b;
+end
+
+% plotting
+figure;
+for j = 1:length(a_1b)
+    plot(reshape(pf(j, :, :), [1,N]), reshape(pd(j, :, :), [1,N]), ... 
+        'DisplayName', ['SNR = ', num2str(SNR(j))], 'linewidth', 1)
+    hold on
+end
+
+xlabel('Pf'),ylabel('Pd'),title('Receiver Operating Curve'),legend;
+
+% c)
+
+% (C0_1 - C1_1) * P1 * f(y|H1) = (C1_0 - C0_0) * P0 * f(y|H0)
+% solve for eta
+% eta = (C1_0 - C0_0) * P0 / ((C0_1 - C1_1) * P1)
+eta_1c = (0.1) * p0 /p1;
+a_1c =2;
+var_1c = 1;
+
+% same stuff as part b
+% just a different eta
+target_1c = (rand(N,1) > p0);
+A_1c = a_1c * double(target_1c);
+X_1c = sqrt(var_1c) * randn(N,1);
+
+Y_1c = A_1c + X_1c;
+    
+gamma_1c = a_1c/2 + var_1c * log(eta_1c) / a_1c;
+    
+% find false positive probability pf and true positive probability pd 
+pf_1c = sum(and(Y_1c > gamma_1c, ~target_1c)) / sum(~target_1c);
+pd_1c = sum(and(Y_1c > gamma_1c, target_1c)) ./ sum(target_1c);
+
+figure;
+% using a = 2, first plot the corresponding ROC with a = 2, SNR = 2
+plot(reshape(pf(3, :, :), [1,N]), reshape(pd(3, :, :), [1,N]), ...
+        'DisplayName', ['SNR = ',num2str(SNR(3))], 'linewidth', 1)
+hold on
+% mark the point
+plot(pf_1c, pd_1c, '*', 'DisplayName', '\eta = 0.4')
+xlabel('Pf'),ylabel('Pd')
+title(['Receiver Operating Curve, C_{01} = 10 * C_{10}' ...
+        '(\eta = 0.4), SNR = ', num2str(SNR(3))])
+legend;
+
+%% e)
+clear;
+
+% a)
+% retyping values
+N = 10000;
+p0 = 0.8;
+p1 = 1 - p0;
+eta = p0/p1;
+var_x = 1;
+var_z = 25;
+sigma_x = sqrt(var_x);
+sigma_z = sqrt(var_z);
+a = 1;
+
+target = (rand(N,1) > p0);
+A = a * double(target);
+X = sigma_x * randn(N,1);
+Z = sigma_z * randn(N,1);
+
+% new definition of Y here
+Y = a + X .* target + Z .* (~target);
+
+
+% theoretical probability of error
+gamma = sqrt(2 * ((var_x * var_z)/(var_x - var_z)) * ...
+                log(eta * sqrt(var_x/var_z)));
+
+p1_0 = normcdf(gamma, 0, sigma_z) - normcdf(-gamma, 0, sigma_z);
+p0_1 = 2 * (1 - normcdf(gamma, 0, sigma_x));
+
+theoretical_err = p1_0 * p0 + p0_1 * p1;
+
+% experimental probability of error
+experimental_err = sum(or(...
+ and( ...
+  (p1 * (1 / sqrt(var_x * 2 * pi)) * exp(-((Y - a).^2) / (2 * var_x)))>=...
+  (p0 * (1 / sqrt(var_z * 2 * pi)) * exp(-((Y - a).^2) / (2 * var_z)))...
+    , target),...
+  and(...
+  (p1 * (1 / sqrt(var_x * 2 * pi)) * exp(-((Y - a).^2) / (2 * var_x)))>=...
+  (p0 * (1 / sqrt(var_z * 2 * pi)) * exp(-((Y - a).^2) / (2 * var_z)))...
+  , ~target))) / N;
+disp("Perr_theoretical = " + theoretical_err);
+disp("Perr_experimental = " + experimental_err);
+
+% b)
+var_z = [4, 9, 16, 25]; 
+sigma_z = sqrt(var_z);
+
+eta = logspace(-5,3,500);
+
+pf = zeros(length(var_z), 1, 500);
+pd = zeros(length(var_z), 1, 500);
+sigZ_to_sigX = zeros(length(var_z), 1, N);
+
+for i = 1:length(var_z)
+    target = (rand(N,1) > p0);
+    A = a * double(target);
+    X = sigma_x * randn(N,1);
+    Z = sigma_z(i) * randn(N,1);
+    Y = a + X .* target + Z .* (~target);
+    
+    % receiver operating value
+    pf(i,:,:) = sum(and(...
+     (p1 * (1/sqrt(var_x *2*pi)) * exp(-((Y - a).^2) / (2 * var_x))) >= ...
+     (p0*(1/sqrt(var_z(i)*2*pi)) * exp(-((Y-a).^2)/(2*var_z(i))))*eta...
+     , ~target))/sum(~target);
+    pd(i,:,:) = sum(and(...
+     (p1 * (1/sqrt(var_x *2*pi)) * exp(-((Y - a).^2) / (2 * var_x))) >= ...
+     (p0*(1/sqrt(var_z(i)*2*pi)) * exp(-((Y-a).^2)/(2*var_z(i))))*eta...
+     , target))/sum(target);
+    % \sigma_z^2 / \sigma_x^2 ratio
+    sigZ_to_sigX(i) = var_z(i) / var_x;
+end
+
+% plotting
+figure;
+for j = 1:length(var_z)
+    plot(reshape(pf(j, :, :), [1,500]), reshape(pd(j, :, :), [1,500]), ... 
+        'DisplayName', ['\sigma_z^2/\sigma_x^2= ',num2str(sigZ_to_sigX(j))], ...
+        'linewidth', 1)
+    hold on
+end
+
+xlabel('Pf'),ylabel('Pd'),title('Receiver Operating Curve'),legend;
+
+% Thanks to Mark Koszykowski for his help with part 1 of this project.
+%% Part 2
+clear;
+load('Iris.mat');
+
+%given/set-up
+num_samples = size(features, 1);         
+num_classes = 3;         
+
+%splitting data
+size_split= num_samples/2;
+shuffling=randperm(num_samples,num_samples);
+training=transpose(shuffling);
+training=training(76:150);
+testing=training(1:75);
+
+%training
+train_f = features(training, :);
+train_l = labels(training, :);
+
+%testing
+test_f = features(testing, :);
+test_l= labels(testing, :);
+
+% calculating priors
+priors = histcounts(test_l) / length(test_l);
+
+%locating where the labels are for each class (1,2,3)
+track_1=train_l==1;
+track_2=train_l==2;
+track_3=train_l==3;
+feat1=train_f(track_1,:);
+feat2=train_f(track_2,:);
+feat3=train_f(track_3,:);
+
+%calculating the mean
+mu1=mean(feat1);
+mu2=mean(feat2);
+mu3=mean(feat3);
+
+%calculating the variances
+cov1=cov(feat1);
+cov2=cov(feat2);
+cov3=cov(feat3);
+
+%compute likelihood
+result(:,1) = mvnpdf(test_f, mu1, cov1) * priors(1);
+result(:,2) = mvnpdf(test_f, mu2, cov2) * priors(2);
+result(:,3) = mvnpdf(test_f, mu3, cov3) * priors(3);
+
+% get the maximum
+[~, est] = max(result, [], 2);
+
+%calculate the error
+prob_err = 1- mean(est == test_l);
+disp("The probability of error: "+prob_err);
+
+%confusion matrix
+cm=confusionmat(est, test_l);
+
+figure;
+confusionchart(cm);
+title('Confusion Matrix');
+%disp(cm);
+
+##### SOURCE END #####
+--></body></html>
