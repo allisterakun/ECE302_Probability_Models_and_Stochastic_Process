@@ -1,0 +1,10 @@
+Feedback
+a) correct
+
+b) you missed that its the abs(r), which changes the range of the integral
+
+c)correct
+
+d)correct
+Points
+9 / 10
